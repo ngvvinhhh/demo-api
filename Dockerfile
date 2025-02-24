@@ -10,15 +10,13 @@ RUN mvn clean package -DskipTests
 
 # Bước 2: Tạo image chứa file JAR đã build
 FROM openjdk:17-jdk-alpine
-
-# Đặt thư mục làm việc
 WORKDIR /app
 
-# Sao chép file JAR từ bước build
-COPY --from=build /app/target/demo.jar app.jar
+# Sao chép file JAR từ bước build trước đó
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose cổng 8080
 EXPOSE 8080
 
 # Chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "demo.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
