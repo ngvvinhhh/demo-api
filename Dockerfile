@@ -8,6 +8,9 @@ COPY . .
 # Build ứng dụng, tạo file JAR
 RUN mvn clean package -DskipTests
 
+# Tìm file .jar đúng và đổi tên thành app.jar
+RUN mv target/*.jar app.jar
+
 # Bước 2: Tạo image chứa file JAR đã build
 FROM openjdk:17-jdk-alpine
 
@@ -15,7 +18,7 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # Sao chép file JAR từ bước build
-COPY --from=build /app/target/demo.jar app.jar
+COPY --from=build /app/target/app.jar app.jar
 
 # Expose cổng 8080
 EXPOSE 8080
