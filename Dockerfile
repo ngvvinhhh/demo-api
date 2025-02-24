@@ -15,7 +15,7 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # Sao chép file JAR từ bước build
-COPY --from=build /app/target/demo-1.jar app.jar
+COPY --from=build /app/target/demo.jar app.jar
 
 # Expose cổng 8080
 EXPOSE 8080
