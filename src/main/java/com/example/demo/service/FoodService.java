@@ -1,13 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Account;
 import com.example.demo.entity.Food;
-import com.example.demo.entity.Role;
-import com.example.demo.exception.DuplicateEntity;
 import com.example.demo.exception.FoodNotFound;
 import com.example.demo.model.*;
 import com.example.demo.repository.FoodRepository;
-import jakarta.validation.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

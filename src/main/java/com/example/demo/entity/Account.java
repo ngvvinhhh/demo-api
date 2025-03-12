@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.demo.entity.Enum.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -16,24 +16,25 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Table(name = "account")
 public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
 
-    String name;
+    private String name;
 
 
     @Email(message = "Email not valid!")
-    String email;
+    private String email;
 
 
     @NotBlank(message = "Password can not blank!")
     @Size(min = 6, message = "Password must be at least 6 characters!")
-    String password;
+    private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

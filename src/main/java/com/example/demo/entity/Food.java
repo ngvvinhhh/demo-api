@@ -1,13 +1,10 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,13 +12,22 @@ import java.util.UUID;
 public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    String image;
-    String name;
-    String description;
-    float price;
-    LocalDateTime create_at;
-    LocalDateTime update_at;
+    private long id;
+    private String image;
+    private String name;
+    private String description;
+
+    private double price;
+
+    private String category;
+
+    private String petType;
+
+    private String foodType;
+
+    private LocalDateTime create_at;
+    private LocalDateTime update_at;
+
     @Column(name = "is_delete")
     private boolean isDelete;
 }
