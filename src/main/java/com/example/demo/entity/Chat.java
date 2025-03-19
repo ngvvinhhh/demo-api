@@ -18,6 +18,10 @@ public class Chat {
     @JoinColumn(name = "userId", nullable = false)
     private Account user;
 
+    private String avatarRecipient;
+
+    private String nameRecipient;
+
     @Column(columnDefinition = "TEXT")
     private String message;
 

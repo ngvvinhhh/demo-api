@@ -11,5 +11,8 @@ public class UpdateFoodResponse {
     String name;
     String description;
     float price;
+    String category;
+    String petType;
+    String foodType;
     LocalDateTime update_at;
 }

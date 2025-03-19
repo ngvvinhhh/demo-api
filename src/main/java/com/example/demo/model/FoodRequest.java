@@ -14,4 +14,10 @@ public class FoodRequest {
     String description;
     @Min(value = 0, message = "The price of the dish cannot be less than 0!")
     float price;
+    @NotBlank(message = "category is not blank!")
+    String category;
+    @NotBlank(message = "PetType is not blank!")
+    String petType;
+    @NotBlank(message = "Food Type is not blank!")
+    String foodType;
 }

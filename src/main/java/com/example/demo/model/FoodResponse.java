@@ -11,5 +11,8 @@ public class FoodResponse {
     String name;
     String description;
     float price;
+    String category;
+    String petType;
+    String foodType;
     LocalDateTime create_at;
 }
