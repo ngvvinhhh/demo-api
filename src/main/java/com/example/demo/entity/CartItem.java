@@ -27,4 +27,6 @@ public class CartItem {
 
     private LocalDateTime create_at;
     private LocalDateTime update_at;
+    @Column(name = "is_delete")
+    private boolean isDelete;
 }
