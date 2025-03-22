@@ -79,7 +79,7 @@ public class CartService {
         Cart cart = cartRepository.findByUser(user).orElseGet(() -> {
             Cart newCart = new Cart();
             newCart.setUser(user);
-            newCart.setCreate_at(LocalDateTime.now());
+            newCart.setCreateAt(LocalDateTime.now());
             return cartRepository.save(newCart);
         });
 

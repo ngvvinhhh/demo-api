@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class AuthenticationService implements UserDetailsService {
             Account account = modelMapper.map(registerRequest, Account.class);
             account.setPassword(passwordEncoder.encode(account.getPassword()));
             account.setRole(Role.CUSTOMER);
+            account.setCreateAt(LocalDateTime.now());
             Account newAccount = accountRepository.save(account);
 
             return modelMapper.map(newAccount, RegisterResponse.class);

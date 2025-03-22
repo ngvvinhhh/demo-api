@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +36,9 @@ public class Account implements UserDetails {
     @NotBlank(message = "Password can not blank!")
     @Size(min = 6, message = "Password must be at least 6 characters!")
     private String password;
+
+    @JoinColumn(name = "create_at")
+    private LocalDateTime createAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -5,7 +5,9 @@ import com.example.demo.entity.Enum.OrderStatus;
 import com.example.demo.entity.Enum.PaymentStatusEnum;
 import com.example.demo.exception.FoodNotFound;
 import com.example.demo.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -44,6 +46,7 @@ public class PaymentService {
     OrderItemRepository orderItemRepository;
 
 
+    @Transactional
     public Payment createPayment() {
         Account customer = authenticationService.getCurrentAccount();
         Cart cart = cartRepository.findByUser(customer)
@@ -53,10 +56,6 @@ public class PaymentService {
             throw new IllegalStateException("Cart is empty, cannot create payment");
         }
 
-        Optional<Payment> existingPayment = paymentRepository.findByCart(cart);
-        if (existingPayment.isPresent()) {
-            throw new RuntimeException("A payment already exists for this cart: " + cart.getCartId());
-        }
 
         Payment payment = new Payment();
         payment.setCreatedAt(LocalDateTime.now());
@@ -65,7 +64,39 @@ public class PaymentService {
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum());
         payment.setStatus(PaymentStatusEnum.PENDING);
-        return paymentRepository.save(payment);
+
+        Orders order = new Orders();
+        order.setUser(cart.getUser());
+        order.setTotalAmount(payment.getTotal());
+        order.setStatus(OrderStatus.Pending);
+        order.setCreate_at(LocalDateTime.now());
+        order.setUpdate_at(LocalDateTime.now());
+        order.setDelete(false);
+
+        Orders savedOrder = ordersRepository.save(order);
+
+        List<OrderItem> orderItems = cart.getCartItems().stream()
+                .map(cartItem -> {
+                    OrderItem item = new OrderItem();
+                    item.setOrder(savedOrder);
+                    item.setProduct(cartItem.getProduct());
+                    item.setQuantity(cartItem.getQuantity());
+                    return item;
+                }).toList();
+
+        order.setOrderItems(orderItems);
+        orderItemRepository.saveAll(orderItems);
+
+        try {
+            payment.setStatus(PaymentStatusEnum.SUCCESS);
+            paymentRepository.save(payment);
+
+            return paymentRepository.save(payment);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("A payment has already been created for this cart. Please create a new cart to proceed.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create payment: " + e.getMessage(), e);
+        }
     }
 
     public String createUrl() throws Exception {
@@ -127,33 +158,12 @@ public class PaymentService {
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
 
-        Cart cart = payment.getCart();
-        List<CartItem> cartItems = cart.getCartItems();
-        cart.setDelete(true);
-//        Orders order = new Orders();
-//        order.setUser(cart.getUser());
-//        order.setTotalAmount(payment.getTotal());
-//        order.setStatus(OrderStatus.Pending);
-//        order.setCreate_at(LocalDateTime.now());
-//        order.setUpdate_at(LocalDateTime.now());
-//        order.setDelete(false);
-//        order = ordersRepository.save(order);
-//
-//        Orders finalOrder = order;
-//        List<OrderItem> orderItems = cart.getCartItems().stream()
-//                .map(cartItem -> {
-//                    OrderItem item = new OrderItem();
-//                    item.setOrder(finalOrder);
-//                    item.setProduct(cartItem.getProduct());
-//                    item.setQuantity(cartItem.getQuantity());
-//                    return item;
-//                }).toList();
-//        orderItemRepository.saveAll(orderItems);
-//        order.setOrderItems(orderItems);
-//        ordersRepository.save(order);
-//
-//        payment.setStatus(PaymentStatusEnum.SUCCESS);
-//        paymentRepository.save(payment);
+
+        cartItemRepository.deleteAll(payment.getCart().getCartItems());
+
+        paymentRepository.delete(payment);
+        cartRepository.delete(payment.getCart());
+
         return urlBuilder.toString();
     }
 

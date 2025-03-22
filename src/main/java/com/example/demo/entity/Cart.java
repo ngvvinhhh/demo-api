@@ -22,8 +22,8 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
-
-    private LocalDateTime create_at;
+    @JoinColumn(name = "create_at")
+    private LocalDateTime createAt;
     private LocalDateTime update_at;
     @Column(name = "is_delete")
     private boolean isDelete;
