@@ -26,4 +26,15 @@ public class Chat {
     private String message;
 
     private LocalDateTime create_at;
+    public Chat() {
+    }
+
+    // Constructor đầy đủ (tùy chọn, để tiện sử dụng)
+    public Chat(Account user, String avatarRecipient, String nameRecipient, String message, LocalDateTime create_at) {
+        this.user = user;
+        this.avatarRecipient = avatarRecipient;
+        this.nameRecipient = nameRecipient;
+        this.message = message;
+        this.create_at = create_at;
+    }
 }
