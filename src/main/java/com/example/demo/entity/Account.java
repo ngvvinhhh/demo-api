@@ -28,6 +28,11 @@ public class Account implements UserDetails {
 
     private String name;
 
+    private String phone;
+
+    private String address;
+
+    private String gender;
 
     @Email(message = "Email not valid!")
     private String email;

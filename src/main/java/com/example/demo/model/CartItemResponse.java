@@ -14,5 +14,4 @@ public class CartItemResponse {
     private String image;
     private int quantity;
     private double totalAmount;
-
 }

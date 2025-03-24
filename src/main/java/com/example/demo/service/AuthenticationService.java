@@ -3,10 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Enum.Role;
 import com.example.demo.exception.DuplicateEntity;
-import com.example.demo.model.AccountResponse;
-import com.example.demo.model.LoginRequest;
-import com.example.demo.model.RegisterRequest;
-import com.example.demo.model.RegisterResponse;
+import com.example.demo.model.*;
 import com.example.demo.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -101,4 +98,34 @@ public class AuthenticationService implements UserDetailsService {
         Account account = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return accountRepository.findAccountById(account.getId());
     }
+
+    public ProfileResponse getProfile() {
+        Account currentAccount = getCurrentAccount();
+        return modelMapper.map(currentAccount, ProfileResponse.class);
+    }
+
+    public ProfileResponse updateProfile(ProfileRequest updateProfileRequest) {
+        Account currentAccount = getCurrentAccount();
+
+        if (updateProfileRequest.getName() != null) {
+            currentAccount.setName(updateProfileRequest.getName());
+        }
+        if (updateProfileRequest.getEmail() != null) {
+            currentAccount.setEmail(updateProfileRequest.getEmail());
+        }
+        if (updateProfileRequest.getAddress() != null) {
+            currentAccount.setAddress(updateProfileRequest.getAddress());
+        }
+        if (updateProfileRequest.getGender() != null) {
+            currentAccount.setGender(updateProfileRequest.getGender());
+        }
+        if (updateProfileRequest.getPhone() != null) {
+            currentAccount.setPhone(updateProfileRequest.getPhone());
+        }
+
+        Account updatedAccount = accountRepository.save(currentAccount);
+
+        return modelMapper.map(updatedAccount, ProfileResponse.class);
+    }
+
 }

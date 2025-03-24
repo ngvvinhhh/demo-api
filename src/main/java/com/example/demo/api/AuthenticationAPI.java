@@ -1,10 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.entity.Account;
-import com.example.demo.model.AccountResponse;
-import com.example.demo.model.LoginRequest;
-import com.example.demo.model.RegisterRequest;
-import com.example.demo.model.RegisterResponse;
+import com.example.demo.model.*;
 import com.example.demo.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -42,4 +39,18 @@ public class AuthenticationAPI {
         List<Account> accounts = authenticationService.getAllAccounts();
         return ResponseEntity.ok(accounts);
     }
+
+    @GetMapping("profile")
+    public ResponseEntity<ProfileResponse> getProfile() {
+        ProfileResponse account = authenticationService.getProfile();
+        return ResponseEntity.ok(account);
+    }
+
+
+    @PutMapping("update-profile")
+    public ResponseEntity<ProfileResponse> updateProfile(@Valid @RequestBody ProfileRequest updateProfileRequest) {
+        ProfileResponse updatedProfile = authenticationService.updateProfile(updateProfileRequest);
+        return ResponseEntity.ok(updatedProfile);
+    }
+
 }
